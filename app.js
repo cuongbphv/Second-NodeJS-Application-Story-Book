@@ -9,6 +9,7 @@ const app = express();
 
 //Load model of mongoDB into app
 require('./models/User');
+
 //Passport Config
 require('./config/passport')(passport);
 
@@ -23,7 +24,7 @@ mongoose.connect(keys.mongoURI)
     })
     .catch(err => console.log("Error connect to MongoDB: " + err));
 
-//Session and Cookie-Parser 
+//Session and Cookie-Parser Middleware
 app.use(cookieParser());
 app.use(session({
     secret : 'secret',
