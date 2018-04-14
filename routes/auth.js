@@ -12,7 +12,7 @@ router.get('/google/callback',
         failureRedirect: '/auth/google'
     }),
     (req, res) => {
-        res.redirect('/');
+        res.redirect('/dashboard');
     });
 
 router.get('/verify',(req,res) => {
