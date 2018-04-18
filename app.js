@@ -63,5 +63,7 @@ app.use((req, res, next) => {
 //Load routes into app
 const auth = require('./routes/auth');
 const index = require('./routes/index');
+const stories = require('./routes/stories');
 app.use('/auth', auth);
 app.use('/', index);
+app.use('/stories', stories);
