@@ -1,9 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const handlebars = require('express-handlebars');
+const methodOverride = require('method-override');
+
 const path = require('path');
 
 //declare app use express framework
@@ -14,6 +17,7 @@ app.use(express.static(path.join(__dirname, '/assets')));
 
 //Load model of mongoDB into app
 require('./models/User');
+require('./models/Story');
 
 //Passport Config
 require('./config/passport')(passport);
@@ -29,12 +33,31 @@ mongoose.connect(keys.mongoURI)
     })
     .catch(err => console.log("Error connect to MongoDB: " + err));
 
+// Handlebars Helpers
+const {
+    truncate,
+    stripTags,
+    formatDate,
+    tranText,
+    select
+} = require('./helpers/handlebarsFunction');
+
 //Express-handlebars Middleware
 app.engine('.hbs', handlebars({
+    helpers: {
+        truncate: truncate,
+        stripTags: stripTags,
+        formatDate: formatDate,
+        tranText: tranText,
+        select: select
+    },
     defaultLayout: 'main',
     extname: '.hbs'
 }));
 app.set('view engine', '.hbs');
+
+// Method Override Middelware
+app.use(methodOverride('_method'));
 
 //Session and Cookie-Parser Middleware
 app.use(cookieParser());
@@ -43,6 +66,12 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+
+//Body-parser Middleware
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(bodyParser.json());
 
 //Passport Middleware : use session js to keep on login user
 app.use(passport.initialize());
