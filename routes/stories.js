@@ -112,7 +112,7 @@ router.delete('/:id', (req, res) => {
         _id: req.params.id
     }).then(() => {
         res.redirect('/dashboard');
-    })
+    });
 });
 
 module.exports = router;
