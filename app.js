@@ -39,7 +39,8 @@ const {
     stripTags,
     formatDate,
     tranText,
-    select
+    select,
+    showIcon
 } = require('./helpers/handlebarsFunction');
 
 //Express-handlebars Middleware
@@ -49,7 +50,8 @@ app.engine('.hbs', handlebars({
         stripTags: stripTags,
         formatDate: formatDate,
         tranText: tranText,
-        select: select
+        select: select,
+        showIcon: showIcon
     },
     defaultLayout: 'main',
     extname: '.hbs'

@@ -31,5 +31,17 @@ module.exports = {
     select: function (selected, options) {
         return options.fn(this).replace(new RegExp(' value=\"' + selected + '\"'), '$& selected="selected"')
             .replace(new RegExp('>' + selected + '</option>'), ' selected="selected"$&');
+    },
+    showIcon: function (storyUser, loggedUser, storyId, floating) {
+        if (storyUser == loggedUser) {
+            if (floating == 1) {
+                return `<a href="/stories/edit/${storyId}" class="btn-floating halfway-fab red"><i class="fa fa-pencil"></i></a>`;
+            } 
+            else if (floating == 2) {
+                return `<a href="/stories/edit/${storyId}"><i class="fa fa-pencil"></i></a>`;
+            }
+        } else {
+            return '';
+        }
     }
 };
