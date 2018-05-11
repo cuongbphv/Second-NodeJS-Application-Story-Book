@@ -4,7 +4,7 @@ $(document).ready(function () {
 });
 
 $('#edit-button').click(function(){
-    $('.hidden-div-edit').css('display','block');
+    $(this).parent().parent().find('.hidden-div-edit').eq(0).css('display','block');
 });
 
 CKEDITOR.replace( 'body' );
