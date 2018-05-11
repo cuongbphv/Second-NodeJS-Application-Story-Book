@@ -185,5 +185,33 @@ router.post('/comment/:id', ensureAuthenticated, (req, res) => {
     });
 });
 
+// delete comment 
+router.delete('/comment/:storyId/:commentId', ensureAuthenticated, (req, res) => {
+    Story.findOneAndUpdate({
+        _id: req.params.storyId,
+        $pull: {
+            comments: {
+                'comments.id': req.params.commentId
+            }
+        }
+    }).then(story => {
+        res.redirect(`/stories/show/${story.id}`);
+    });
+});
+
+//edit a comment
+router.put('/comment/:storyId/:commentId', ensureAuthenticated, (req, res) => {
+    Story.findOneAndUpdate({
+        _id: req.params.storyId,
+        'comments._id': req.params.commentId
+    }, {
+        $set: {
+            'comments.$.commentBody': req.body.editCommentBody,
+            'comments.$.commentDate': Date.now()
+        }
+    }).then(story => {
+        res.redirect(`/stories/show/${story.id}`);
+    });
+});
 
 module.exports = router;

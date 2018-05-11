@@ -43,5 +43,21 @@ module.exports = {
         } else {
             return '';
         }
+    },
+    showIconComment: function (commentUser, loggedUser, storyId, commentId) {
+        console.log(commentUser, loggedUser, storyId, commentId);
+        if (commentUser == loggedUser) {
+            return `<button id="edit-button" class="custom-btn">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                <form action="/stories/comment/` + storyId + `/`+ commentId +`?_method=DELETE" method="post" id="delete-form">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="custom-btn">
+                        <i class="fa fa-trash" style="color:red"></i>
+                    </button>
+                </form>`;
+        } else {
+            return '';
+        }
     }
 };

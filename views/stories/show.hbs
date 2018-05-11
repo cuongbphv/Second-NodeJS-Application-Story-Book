@@ -1,60 +1,62 @@
-<div class="row">
-    <div class="col s12 m9">
-        <div class="card story">
-            <div class="card-action center">
-                <h4>{{story.title}}
-                    <small>{{{showIcon story.user.id user.id story.id 2}}}</small>
-                </h4>
-                <span class="card-title">{{formatDate story.date 'Do MMMM YYYY'}}</span>
-            </div>
-            <div class="card-content">
-                {{{story.body}}}
-            </div>
-        </div>
-        {{#if story.allowComments}}
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title">Comments</span>
-                {{#if user}}
-                <form method="post" action="/stories/comment/{{story.id}}">
-                    <div class="input-field">
-                        <textarea name="commentBody" class="materialize-textarea"></textarea>
-                        <label> Add Comment</label>
-                    </div>
-                    <input type="submit" value="Submit" class="btn">
-                </form>
-                {{else}}
-                <p>Please
-                    <a href="/auth/google">log in</a> to leave comment</p>
-                {{/if}}
-            </div>
-        </div>
+const moment = require('moment');
 
-        {{#each story.comments}}
-        <div class="card">
-            <div class="card-content">
-                <h5>{{commentBody}}</h5>
-                <div class="chip">
-                    <img src="{{commentUser.avatar}}"  alt="No image"> 
-                        <a href="/stories/user/{{commentUser.id}}">
-                            {{commentUser.firstName}} {{commentUser.lastName}}
-                        </a>
-                </div>
-                <br>
-                <small>Posted: {{formatDate commentDate 'MMMM Do YYYY'}}</small>
-            </div>
-        </div>
-        {{/each}} {{/if}}
-    </div>
-    <div class="col s12 m3">
-        <div class="card center-align">
-            <div class="card-content">
-                <span class="card-title">{{story.user.firstName}} {{story.user.lastName}}</span>
-                <img src="{{story.user.avatar}}" alt="No image" class="circle responsive-img">
-            </div>
-            <div class="card-action">
-                <a href="/stories/user/{{story.user.id}}">More From {{story.user.firstName}}</a>
-            </div>
-        </div>
-    </div>
-</div>
+module.exports = {
+    // cut and show by length string
+    truncate: function (str, len) {
+        if (str.length > len && str.length > 0) {
+            var new_str = str + " ";
+            new_str = str.substr(0, len);
+            new_str = str.substr(0, new_str.lastIndexOf(" "));
+            new_str = (new_str.length > 0) ? new_str : str.substr(0, len);
+            return new_str + '...';
+        }
+        return str;
+    },
+    // skip tag html when save into database
+    stripTags: function (input) {
+        return input.replace(/<(?:.|\n)*?>/gm, '');
+    },
+    // format date by input date and input format 
+    formatDate: function (date, format) {
+        return moment(date).format(format);
+    },
+    // translate boolean into string
+    tranText: function (allowComments) {
+        if (allowComments == true)
+            return "Allow";
+        else
+            return "Not Allow";
+    },
+    // replace selectbox when call edit function
+    select: function (selected, options) {
+        return options.fn(this).replace(new RegExp(' value=\"' + selected + '\"'), '$& selected="selected"')
+            .replace(new RegExp('>' + selected + '</option>'), ' selected="selected"$&');
+    },
+    showIcon: function (storyUser, loggedUser, storyId, floating) {
+        if (storyUser == loggedUser) {
+            if (floating == 1) {
+                return `<a href="/stories/edit/${storyId}" class="btn-floating halfway-fab red"><i class="fa fa-pencil"></i></a>`;
+            } else if (floating == 2) {
+                return `<a href="/stories/edit/${storyId}"><i class="fa fa-pencil"></i></a>`;
+            }
+        } else {
+            return '';
+        }
+    },
+    showIconComment: function (commentUser, loggedUser, storyId, commentId) {
+        console.log(commentUser, loggedUser, storyId, commentId);
+        if (commentUser == loggedUser) {
+            return `<button id="edit-button" class="custom-btn">
+                        <i class="fa fa-pencil"></i>
+                    </button>
+                <form action="/stories/comment/` + storyId + `/`+ commentId +`?_method=DELETE" method="post" id="delete-form">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="custom-btn">
+                        <i class="fa fa-trash" style="color:red"></i>
+                    </button>
+                </form>`;
+        } else {
+            return '';
+        }
+    }
+};
