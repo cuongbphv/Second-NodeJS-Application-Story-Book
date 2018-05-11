@@ -3,7 +3,7 @@ $(document).ready(function () {
     $('select').material_select();
 });
 
-$('#edit-button').click(function(){
+$('.edit-button').click(function(){
     $(this).parent().parent().find('.hidden-div-edit').eq(0).css('display','block');
 });
 

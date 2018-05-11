@@ -47,7 +47,7 @@ module.exports = {
     showIconComment: function (commentUser, loggedUser, storyId, commentId) {
         console.log(commentUser, loggedUser, storyId, commentId);
         if (commentUser == loggedUser) {
-            return `<button id="edit-button" class="custom-btn">
+            return `<button class="edit-button custom-btn">
                         <i class="fa fa-pencil"></i>
                     </button>
                 <form action="/stories/comment/` + storyId + `/`+ commentId +`?_method=DELETE" method="post" id="delete-form">
